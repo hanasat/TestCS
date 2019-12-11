@@ -43,7 +43,7 @@ namespace dark_place_game
 
         public CurrencyHolder(string name,int capacity, int amount) {
             
-            if (amount < 0 || name == null || name=="" ){
+            if (amount < 0 || name == null || name =="" || name.Length < 4){
                 
                 throw new ArgumentException();
             }
@@ -62,11 +62,37 @@ namespace dark_place_game
         }
 
         public void Store(int amount) {
+            if(this.currentAmount + amount > this.Capacity){
+             throw new ArgumentException("Ajout invalide");
+            }
+             else {
+                 this.currentAmount += amount;
+             }
+           
+                 
             
         }
 
         public void Withdraw(int amount) {
+            if( amount < 0 )
+            {
+                throw new CantWithDrawMoreThanCurrentAmountException();
+            }else 
+            {
+                this.currentAmount -= amount ;
+            }
+
 
         }
+
     }
+
+public class CantWithDrawMoreThanCurrentAmountException : System.Exception{
+
+    public CantWithDrawMoreThanCurrentAmountException() : base ("impossible de retirer un nombre négative"){
+        
+    }
+    
+
+}
 }
