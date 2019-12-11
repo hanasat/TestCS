@@ -14,7 +14,7 @@ namespace dark_place_game.tests
         [Fact]
         public void VraiShouldBeTrue()
         {
-            var vrai = false;
+            var vrai = true;
             Assert.True(vrai, "Erreur, vrai vaut false. Le test est volontairement mal écrit, corrigez le.");
         }
 

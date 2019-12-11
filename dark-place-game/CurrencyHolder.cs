@@ -42,6 +42,12 @@ namespace dark_place_game
         private int capacity = 0;
 
         public CurrencyHolder(string name,int capacity, int amount) {
+            
+            if (amount < 0 || name == null || name=="" ){
+                
+                throw new ArgumentException();
+            }
+            
             Capacity = capacity;
             CurrencyName = name;
             CurrentAmount = amount;
