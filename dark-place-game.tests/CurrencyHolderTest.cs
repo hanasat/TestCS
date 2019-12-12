@@ -107,27 +107,68 @@ namespace dark_place_game.tests
         }
 
         [Fact]
-        public void TestPut10CurrencyInNearlyFullCurrencyHolder()
+        public void TestStore10CurrencyInNearlyFullCurrencyHolder()
         {
             // A vous d'écrire un test qui vérifie que si on ajoute via la methode put 10 currency à un sac quasiement plein, une exeption NotEnoughtSpaceInCurrencyHolderExeption est levée.
             Action capaciteMax = () =>  { 
               CurrencyHolder currencyHolder =   new  CurrencyHolder(EXEMPLE_NOM_MONNAIE_VALIDE,400,399);
                 currencyHolder.Store(10);
+       
             };
-            Assert.Throws<ArgumentException>(capaciteMax);
-            //a revoir
-            
+           Assert.Throws<NotEnoughtSpaceInCurrencyHolderExeption>(capaciteMax);
+                   
             
         }
 
+        
         [Fact]
-        public void CreatingCurrencyHolderWithNameShorterThan4CharacterThrowExeption()
+        public void TestStoreNagativeAmountCurrencyInNearlyFullCurrencyHolder()
         {
-            // A vous d'écrire un test qui doit échouer s'il es possible de créer un CurrencyHolder dont Le Nom De monnaie est inférieur a 4 lettres
-          Action lengthName= () => new CurrencyHolder(EXEMPLE_NOM_MONNAIE_INFQUATRE,EXEMPLE_CAPACITE_VALIDE,EXEMPLE_CONTENANCE_INITIALE_VALIDE);
-          Assert.Throws<ArgumentException>(lengthName);
-          //a revoir 
+            Action capaciteNegative = () =>  { 
+              CurrencyHolder currencyHolder =   new  CurrencyHolder(EXEMPLE_NOM_MONNAIE_VALIDE,400,399);
+              currencyHolder.Store(-54);
+            };
+              Assert.Throws<NotStoreNagativeAmountCurrency>(capaciteNegative);
+
         }
+
+        [Fact]
+        public void TestStorenNullAmountCurrencyInNearlyFullCurrencyHolder()
+        {
+            Action capaciteNegative = () =>  { 
+              CurrencyHolder currencyHolder =   new  CurrencyHolder(EXEMPLE_NOM_MONNAIE_VALIDE,400,399);
+              currencyHolder.Store(0);
+            };
+              Assert.Throws<NotStoreNullAmountInCurrencyHolderExeption>(capaciteNegative);
+
+        }
+
+        [Fact]
+        public void CreatingCurrencyHolderWithNameShorterThan4CharacterThrowExeption(){
+            // A vous d'écrire un test qui doit échouer s'il es possible de créer un CurrencyHolder dont Le Nom De monnaie est inférieur a 4 lettres
+          Action lengthName4= () => new CurrencyHolder(EXEMPLE_NOM_MONNAIE_INFQUATRE,EXEMPLE_CAPACITE_VALIDE,EXEMPLE_CONTENANCE_INITIALE_VALIDE);
+          Assert.Throws<LengthNameException>(lengthName4);
+        }
+
+        [Fact]
+        public void CreatingCurrencyHolderWith12Chars(){
+            Action lengthName10= () => new CurrencyHolder("RBCDEFRGTHYJ",EXEMPLE_CAPACITE_VALIDE,EXEMPLE_CONTENANCE_INITIALE_VALIDE);
+          Assert.Throws<LengthNameException>(lengthName10);
+        }
+
+        [Fact]
+        public void CreatingCurrencyHolderWithFirstIsA(){
+            Action lengthNameUpper = () => new CurrencyHolder("ABCDEFRGTH",EXEMPLE_CAPACITE_VALIDE,EXEMPLE_CONTENANCE_INITIALE_VALIDE);
+        Assert.Throws<NotCreatingCurrencyHolderWithFirstIsA>(lengthNameUpper);
+        }
+
+        [Fact]
+        public void CreatinCurrencyHolderNameWhitFirstCharIsLower(){
+             Action lengthNameMin= () => new CurrencyHolder("aBCDEFRG",EXEMPLE_CAPACITE_VALIDE,EXEMPLE_CONTENANCE_INITIALE_VALIDE);
+        Assert.Throws<NotCreatingCurrencyHolderWithFirstCharIsa>(lengthNameMin);
+
+        }
+    
 
         [Fact]
         public void WithdrawMoreThanCurrentAmountInCurrencyHolderThrowExeption()
@@ -141,7 +182,64 @@ namespace dark_place_game.tests
             Assert.Throws<CantWithDrawMoreThanCurrentAmountException>(AmountNegative);
             
         }
+       [Fact]
+        public void CurrencyHolderWithNegativeCapacity()
+        {
+            Action ch = () => new CurrencyHolder(EXEMPLE_NOM_MONNAIE_VALIDE,-9,450 );
+           Assert.Throws<NotCurrencyHolderWithNegativeCapacity>(ch);
+            
+        }
       
+        [Fact]
+        public void WithDrawWithNullCurrentAmount(){
+            Action ch = () => {
+                CurrencyHolder cHolder = new CurrencyHolder(EXEMPLE_NOM_MONNAIE_VALIDE,600,450 );
+                cHolder.Withdraw(0);
+            };
+           Assert.Throws<NotWithDrawWithNullCurrentAmountException>(ch);
+        }
 
+        [Fact]
+        public void CurrencyHolderIsEmpty1(){
+            CurrencyHolder ch = new CurrencyHolder("hanane",400,0);
+            var result = ch.IsEmpty();
+            Assert.True(result);
+        }
+        [Fact]
+        public void CurrencyHolderIsEmpty2(){
+            CurrencyHolder ch = new CurrencyHolder("hanane",400,14);
+            var result = ch.IsEmpty();
+            Assert.False(result);
+        }
+
+         [Fact]
+        public void CurrencyHolderIsFull1(){
+            CurrencyHolder ch = new CurrencyHolder("hanane",400,400);
+            var result = ch.IsFull();
+            Assert.True(result);
+        }
+
+         [Fact]
+        public void CurrencyHolderIsFull2(){
+            CurrencyHolder ch = new CurrencyHolder("hanane",400,10);
+            ch.Store(390);
+            var result = ch.IsFull();
+            Assert.True(result);
+        }
+
+         [Fact]
+        public void CurrencyHolderIsFull3(){
+            CurrencyHolder ch = new CurrencyHolder("hanane",400,40);
+            var result = ch.IsFull();
+            Assert.False(result);
+        }
+
+         [Fact]
+        public void CurrencyHolderIsFull4(){
+            CurrencyHolder ch = new CurrencyHolder("hanane",400,10);
+            ch.Store(39);
+            var result = ch.IsFull();
+            Assert.False(result);
+        }
     }
 }

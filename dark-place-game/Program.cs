@@ -9,7 +9,9 @@ namespace dark_place_game
         static void Main(string[] args)
         {
             Console.WriteLine("Lancement du jeu Dark Place ...");
+            
             throw new Exception("Le jeu ne semble pas encore codé !");
+
         }
     }
 

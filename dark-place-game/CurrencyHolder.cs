@@ -6,7 +6,13 @@ namespace dark_place_game
     [System.Serializable]
     /// Une Exeption Custom
     public class NotEnoughtSpaceInCurrencyHolderExeption : System.Exception {}
-
+    public class NotCurrencyHolderWithNegativeCapacity : System.Exception {}
+    public class NotStoreNullAmountInCurrencyHolderExeption : System.Exception {}
+    public class NotCreatingCurrencyHolderWithFirstIsA : System.Exception {}
+    public class NotStoreNagativeAmountCurrency : System.Exception{}
+    public class NotWithDrawWithNullCurrentAmountException : System.Exception{}
+    public class NotCreatingCurrencyHolderWithFirstCharIsa : System.Exception{}
+    public class LengthNameException : System.Exception{  public LengthNameException (String msg){}}
     public class CurrencyHolder
     {
         public static readonly string CURRENCY_DEFAULT_NAME = "Unnamed";
@@ -43,41 +49,74 @@ namespace dark_place_game
 
         public CurrencyHolder(string name,int capacity, int amount) {
             
-            if (amount < 0 || name == null || name =="" || name.Length < 4){
+            if (amount < 0 ){
+
+                throw new ArgumentException("Argument invalide");
+
+            }if(name == null || name =="" ){
+                 throw new ArgumentException("Argument invalide");
+                 
+            }if( name.Length < 4 || name.Length > 10){
                 
-                throw new ArgumentException();
+                throw new LengthNameException("Argument invalide");
             }
+            if(capacity < 1 )
+            {
+                throw new NotCurrencyHolderWithNegativeCapacity();
+            }if (name[0]=='A'){
+                throw new NotCreatingCurrencyHolderWithFirstIsA();
+            }if (name[0]=='a'){
+                throw new NotCreatingCurrencyHolderWithFirstCharIsa();
+            }
+                    Capacity = capacity;
+                     CurrencyName = name;
+                    CurrentAmount = amount;
             
-            Capacity = capacity;
-            CurrencyName = name;
-            CurrentAmount = amount;
+                     
         }
 
         public bool IsEmpty() {
-            return true;
+            if(this.currentAmount == 0 )
+                return true;
+            else 
+            return false;
         }
 
         public bool IsFull() {
-            return true;
+            if(this.currentAmount == this.capacity)
+                return true;
+            else 
+                return false;
         }
 
         public void Store(int amount) {
-            if(this.currentAmount + amount > this.Capacity){
-             throw new ArgumentException("Ajout invalide");
+            if(amount > 0 )
+            {
+                if(this.currentAmount + amount > this.Capacity){
+                 throw new NotEnoughtSpaceInCurrencyHolderExeption();
+                 }
+                  else {
+                      this.currentAmount += amount;
+                   }
+            }else if(amount == 0)
+            {
+                throw new NotStoreNullAmountInCurrencyHolderExeption();
+
+            }else if (amount < 0 ){
+                throw new NotStoreNagativeAmountCurrency();
             }
-             else {
-                 this.currentAmount += amount;
-             }
-           
-                 
+                
+            
             
         }
 
         public void Withdraw(int amount) {
             if( amount < 0 )
             {
-                throw new CantWithDrawMoreThanCurrentAmountException();
-            }else 
+                throw new CantWithDrawMoreThanCurrentAmountException("Argument invalide");
+            }else if(amount == 0){
+                throw new NotWithDrawWithNullCurrentAmountException();
+            }else
             {
                 this.currentAmount -= amount ;
             }
@@ -89,8 +128,8 @@ namespace dark_place_game
 
 public class CantWithDrawMoreThanCurrentAmountException : System.Exception{
 
-    public CantWithDrawMoreThanCurrentAmountException() : base ("impossible de retirer un nombre négative"){
-        
+    public CantWithDrawMoreThanCurrentAmountException(String msg) : base ("impossible de retirer un nombre négative"){
+
     }
     
 
